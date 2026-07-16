@@ -62,8 +62,8 @@ public:
 class Fraction
 {
 private:
-    int numerator = DEFAULT_NUMERATOR;
-    int denominator = DEFAULT_DENOMINATOR;
+    int numerator = 1;
+    int denominator = 1;
     bool lastOperationSuccessful = true;
     string lastErrorMessage = NO_ERROR_MESSAGE;
 
@@ -95,7 +95,8 @@ public:
 
 void displayMenu();
 MenuOption getMenuChoice();
-void handleInputError(const string& errorMessage);
+void clearCin(const string& errorMessage);
+void runDemo();
 void demonstrateValidFractions();
 void testZeroDenominator();
 void testZeroNumerator();
@@ -104,7 +105,7 @@ void testNegativeDenominator();
 void testNegativeWholeNumber();
 void testInvalidMixedFraction();
 void testUnknownError();
-void demonstrateException(MenuOption choice);
+void printErrorIfNeeded(const Fraction& fraction);
 
 /*
 Description:
@@ -130,36 +131,8 @@ int main()
 
         switch (choice)
         {
-            case VALID_FRACTION:
-                demonstrateValidFractions();
-                break;
-
-            case ZERO_DENOMINATOR:
-                testZeroDenominator();
-                break;
-
-            case ZERO_NUMERATOR:
-                testZeroNumerator();
-                break;
-
-            case NEGATIVE_NUMERATOR_TEST:
-                testNegativeNumerator();
-                break;
-
-            case NEGATIVE_DENOMINATOR_TEST:
-                testNegativeDenominator();
-                break;
-
-            case NEGATIVE_WHOLE_TEST:
-                testNegativeWholeNumber();
-                break;
-
-            case IMPROPER_FRACTION:
-                testInvalidMixedFraction();
-                break;
-
-            case UNKNOWN_ERROR_TEST:
-                testUnknownError();
+            case DEMO:
+                runDemo();
                 break;
 
             case QUIT:
@@ -167,7 +140,7 @@ int main()
                 break;
 
             default:
-                handleInputError("Invalid menu choice.");
+                clearCin(INPUT_ERROR_MESSAGE);
                 break;
         }
     }
@@ -177,8 +150,6 @@ int main()
 }
 
 int Fraction::fractionCount = 0;
-const int Fraction::DEFAULT_NUMERATOR;
-const int Fraction::DEFAULT_DENOMINATOR;
 
 /*
 Description:
