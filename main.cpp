@@ -625,11 +625,7 @@ void demonstrateValidFractions()
         Fraction defaultFraction;
         Fraction oneArgumentFraction(TEST_NEW_NUMERATOR);
         Fraction twoArgumentFraction(TEST_NUMERATOR, TEST_DENOMINATOR);
-        Fraction threeArgumentFraction(
-            TEST_WHOLE,
-            TEST_NUMERATOR,
-            TEST_DENOMINATOR
-        );
+        Fraction threeArgumentFraction(TEST_WHOLE, TEST_NUMERATOR, TEST_DENOMINATOR);
         Fraction copiedFraction(threeArgumentFraction);
 
         cout << "Default constructor: ";
@@ -659,11 +655,7 @@ void demonstrateValidFractions()
         cout << "\nAfter two-argument setFraction: ";
         defaultFraction.print();
 
-        defaultFraction.setFraction(
-            TEST_WHOLE,
-            TEST_NUMERATOR,
-            TEST_DENOMINATOR
-        );
+        defaultFraction.setFraction(TEST_WHOLE, TEST_NUMERATOR, TEST_DENOMINATOR);
         cout << "\nAfter three-argument setFraction: ";
         defaultFraction.print();
 
@@ -672,14 +664,8 @@ void demonstrateValidFractions()
         twoArgumentFraction.print();
         cout << '\n';
 
-        try
-        {
-            twoArgumentFraction.setDenominator(0);
-        }
-        catch (const FractionException& error)
-        {
-            cout << "Fraction exception: " << error.getMessage() << '\n';
-        }
+        twoArgumentFraction.setDenominator(0);
+        printErrorIfNeeded(twoArgumentFraction);
 
         cout << "Fraction after invalid change: ";
         twoArgumentFraction.print();
@@ -703,7 +689,16 @@ Post-condition:
 */
 void testZeroDenominator()
 {
-    demonstrateException(ZERO_DENOMINATOR);
+    cout << "\nObjects before zero-denominator demonstration: "
+         << Fraction::getFractionCount() << '\n';
+
+    {
+        Fraction testFraction(TEST_NUMERATOR, 0);
+        printErrorIfNeeded(testFraction);
+    }
+
+    cout << "Objects after zero-denominator demonstration: "
+         << Fraction::getFractionCount() << '\n';
 }
 
 /*
@@ -718,7 +713,16 @@ Post-condition:
 */
 void testZeroNumerator()
 {
-    demonstrateException(ZERO_NUMERATOR);
+    cout << "\nObjects before zero-numerator demonstration: "
+         << Fraction::getFractionCount() << '\n';
+
+    {
+        Fraction testFraction(0, TEST_DENOMINATOR);
+        printErrorIfNeeded(testFraction);
+    }
+
+    cout << "Objects after zero-numerator demonstration: "
+         << Fraction::getFractionCount() << '\n';
 }
 
 /*
@@ -733,7 +737,16 @@ Post-condition:
 */
 void testNegativeNumerator()
 {
-    demonstrateException(NEGATIVE_NUMERATOR_TEST);
+    cout << "\nObjects before negative-numerator demonstration: "
+         << Fraction::getFractionCount() << '\n';
+
+    {
+        Fraction testFraction(NEGATIVE_NUMERATOR, TEST_DENOMINATOR);
+        printErrorIfNeeded(testFraction);
+    }
+
+    cout << "Objects after negative-numerator demonstration: "
+         << Fraction::getFractionCount() << '\n';
 }
 
 /*
@@ -748,7 +761,16 @@ Post-condition:
 */
 void testNegativeDenominator()
 {
-    demonstrateException(NEGATIVE_DENOMINATOR_TEST);
+    cout << "\nObjects before negative-denominator demonstration: "
+         << Fraction::getFractionCount() << '\n';
+
+    {
+        Fraction testFraction(TEST_NUMERATOR, NEGATIVE_DENOMINATOR);
+        printErrorIfNeeded(testFraction);
+    }
+
+    cout << "Objects after negative-denominator demonstration: "
+         << Fraction::getFractionCount() << '\n';
 }
 
 /*
@@ -763,7 +785,16 @@ Post-condition:
 */
 void testNegativeWholeNumber()
 {
-    demonstrateException(NEGATIVE_WHOLE_TEST);
+    cout << "\nObjects before negative-whole-number demonstration: "
+         << Fraction::getFractionCount() << '\n';
+
+    {
+        Fraction testFraction(NEGATIVE_WHOLE, TEST_NUMERATOR, TEST_DENOMINATOR);
+        printErrorIfNeeded(testFraction);
+    }
+
+    cout << "Objects after negative-whole-number demonstration: "
+         << Fraction::getFractionCount() << '\n';
 }
 
 /*
@@ -778,7 +809,16 @@ Post-condition:
 */
 void testInvalidMixedFraction()
 {
-    demonstrateException(IMPROPER_FRACTION);
+    cout << "\nObjects before invalid-mixed-fraction demonstration: "
+         << Fraction::getFractionCount() << '\n';
+
+    {
+        Fraction testFraction(IMPROPER_WHOLE, IMPROPER_NUMERATOR, IMPROPER_DENOMINATOR);
+        printErrorIfNeeded(testFraction);
+    }
+
+    cout << "Objects after invalid-mixed-fraction demonstration: "
+         << Fraction::getFractionCount() << '\n';
 }
 
 /*
@@ -793,93 +833,32 @@ Post-condition:
 */
 void testUnknownError()
 {
-    demonstrateException(UNKNOWN_ERROR_TEST);
+    FractionException error;
+
+    cout << "\nObjects before unknown-error demonstration: "
+         << Fraction::getFractionCount() << '\n';
+    cout << "Fraction exception: " << error.getMessage() << '\n';
+    cout << "Objects after unknown-error demonstration: "
+         << Fraction::getFractionCount() << '\n';
 }
 
 /*
 Description:
-    Demonstrates a selected Fraction exception using hard-coded values.
+    Prints a Fraction error message if the last operation failed.
 
 Pre-condition:
-    choice identifies an exception demonstration.
+    fraction is a valid Fraction object.
 
 Post-condition:
-    The selected exception is caught and displayed, and the Fraction
-    object count is displayed before and after the demonstration.
+    The error message is displayed only when the last operation failed.
 */
-void demonstrateException(MenuOption choice)
+void printErrorIfNeeded(const Fraction& fraction)
 {
-    cout << "\nObjects before exception demonstration: "
-         << Fraction::getFractionCount() << '\n';
-
-    try
+    if (!fraction.wasLastOperationSuccessful())
     {
-        switch (choice)
-        {
-            case ZERO_DENOMINATOR:
-            {
-                Fraction testFraction(TEST_NUMERATOR, 0);
-                break;
-            }
-
-            case ZERO_NUMERATOR:
-            {
-                Fraction testFraction(0, TEST_DENOMINATOR);
-                break;
-            }
-
-            case NEGATIVE_NUMERATOR_TEST:
-            {
-                Fraction testFraction(
-                    NEGATIVE_NUMERATOR,
-                    TEST_DENOMINATOR
-                );
-                break;
-            }
-
-            case NEGATIVE_DENOMINATOR_TEST:
-            {
-                Fraction testFraction(
-                    TEST_NUMERATOR,
-                    NEGATIVE_DENOMINATOR
-                );
-                break;
-            }
-
-            case NEGATIVE_WHOLE_TEST:
-            {
-                Fraction testFraction(
-                    NEGATIVE_WHOLE,
-                    TEST_NUMERATOR,
-                    TEST_DENOMINATOR
-                );
-                break;
-            }
-
-            case IMPROPER_FRACTION:
-            {
-                Fraction testFraction(
-                    IMPROPER_WHOLE,
-                    IMPROPER_NUMERATOR,
-                    IMPROPER_DENOMINATOR
-                );
-                break;
-            }
-
-            case UNKNOWN_ERROR_TEST:
-                throw FractionException(UNKNOWN_FRACTION_ERROR);
-
-            default:
-                throw FractionException(UNKNOWN_FRACTION_ERROR);
-        }
+        cout << "Fraction exception: "
+             << fraction.getLastErrorMessage() << '\n';
     }
-    catch (const FractionException& error)
-    {
-        cout << "Fraction exception: " << error.getMessage() << '\n';
-    }
-
-    cout << "Objects after exception demonstration: "
-         << Fraction::getFractionCount() << '\n';
 }
 
 /*
@@ -889,21 +868,29 @@ Muhammad Yusuf Rehman
 
 
 Fraction Class Test Menu
-1 Demonstrate valid Fractions
-2 Test zero denominator
-3 Test zero numerator
-4 Test negative numerator
-5 Test negative denominator
-6 Test negative whole number
-7 Test invalid mixed fraction
-8 Test unknown error
-9 Quit
-Enter your choice: ok
-Invalid menu choice.
+1 Demo
+2 Quit
 Enter your choice: 0
 Invalid menu choice.
-Enter your choice: huh?
+
+
+Fraction Class Test Menu
+1 Demo
+2 Quit
+Enter your choice: a
 Invalid menu choice.
+
+
+Fraction Class Test Menu
+1 Demo
+2 Quit
+Enter your choice: 3
+Invalid menu choice.
+
+
+Fraction Class Test Menu
+1 Demo
+2 Quit
 Enter your choice: 1
 
 Objects before demonstration: 0
@@ -926,137 +913,39 @@ Fraction after invalid change: 3/4
 Objects during demonstration: 5
 Objects after demonstration: 0
 
-
-Fraction Class Test Menu
-1 Demonstrate valid Fractions
-2 Test zero denominator
-3 Test zero numerator
-4 Test negative numerator
-5 Test negative denominator
-6 Test negative whole number
-7 Test invalid mixed fraction
-8 Test unknown error
-9 Quit
-Enter your choice: 2
-
-Objects before exception demonstration: 0
+Objects before zero-denominator demonstration: 0
 Fraction exception: The denominator cannot be zero.
-Objects after exception demonstration: 0
+Objects after zero-denominator demonstration: 0
 
-
-Fraction Class Test Menu
-1 Demonstrate valid Fractions
-2 Test zero denominator
-3 Test zero numerator
-4 Test negative numerator
-5 Test negative denominator
-6 Test negative whole number
-7 Test invalid mixed fraction
-8 Test unknown error
-9 Quit
-Enter your choice: 3
-
-Objects before exception demonstration: 0
+Objects before zero-numerator demonstration: 0
 Fraction exception: The numerator cannot be zero.
-Objects after exception demonstration: 0
+Objects after zero-numerator demonstration: 0
 
-
-Fraction Class Test Menu
-1 Demonstrate valid Fractions
-2 Test zero denominator
-3 Test zero numerator
-4 Test negative numerator
-5 Test negative denominator
-6 Test negative whole number
-7 Test invalid mixed fraction
-8 Test unknown error
-9 Quit
-Enter your choice: 4
-
-Objects before exception demonstration: 0
+Objects before negative-numerator demonstration: 0
 Fraction exception: The numerator cannot be negative.
-Objects after exception demonstration: 0
+Objects after negative-numerator demonstration: 0
 
-
-Fraction Class Test Menu
-1 Demonstrate valid Fractions
-2 Test zero denominator
-3 Test zero numerator
-4 Test negative numerator
-5 Test negative denominator
-6 Test negative whole number
-7 Test invalid mixed fraction
-8 Test unknown error
-9 Quit
-Enter your choice: 5
-
-Objects before exception demonstration: 0
+Objects before negative-denominator demonstration: 0
 Fraction exception: The denominator cannot be negative.
-Objects after exception demonstration: 0
+Objects after negative-denominator demonstration: 0
 
-
-Fraction Class Test Menu
-1 Demonstrate valid Fractions
-2 Test zero denominator
-3 Test zero numerator
-4 Test negative numerator
-5 Test negative denominator
-6 Test negative whole number
-7 Test invalid mixed fraction
-8 Test unknown error
-9 Quit
-Enter your choice: 6
-
-Objects before exception demonstration: 0
+Objects before negative-whole-number demonstration: 0
 Fraction exception: The whole number cannot be negative.
-Objects after exception demonstration: 0
+Objects after negative-whole-number demonstration: 0
 
-
-Fraction Class Test Menu
-1 Demonstrate valid Fractions
-2 Test zero denominator
-3 Test zero numerator
-4 Test negative numerator
-5 Test negative denominator
-6 Test negative whole number
-7 Test invalid mixed fraction
-8 Test unknown error
-9 Quit
-Enter your choice: 7
-
-Objects before exception demonstration: 0
+Objects before invalid-mixed-fraction demonstration: 0
 Fraction exception: The numerator cannot be greater than the denominator when the whole number is greater than zero.
-Objects after exception demonstration: 0
+Objects after invalid-mixed-fraction demonstration: 0
 
-
-Fraction Class Test Menu
-1 Demonstrate valid Fractions
-2 Test zero denominator
-3 Test zero numerator
-4 Test negative numerator
-5 Test negative denominator
-6 Test negative whole number
-7 Test invalid mixed fraction
-8 Test unknown error
-9 Quit
-Enter your choice: 8
-
-Objects before exception demonstration: 0
+Objects before unknown-error demonstration: 0
 Fraction exception: An unknown fraction error occurred.
-Objects after exception demonstration: 0
+Objects after unknown-error demonstration: 0
 
 
 Fraction Class Test Menu
-1 Demonstrate valid Fractions
-2 Test zero denominator
-3 Test zero numerator
-4 Test negative numerator
-5 Test negative denominator
-6 Test negative whole number
-7 Test invalid mixed fraction
-8 Test unknown error
-9 Quit
-Enter your choice: 9
+1 Demo
+2 Quit
+Enter your choice: 2
 
 Fraction class demonstration ended.
 */
