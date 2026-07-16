@@ -20,18 +20,20 @@ const int NEGATIVE_WHOLE = -2;
 const int IMPROPER_WHOLE = 5;
 const int IMPROPER_NUMERATOR = 7;
 const int IMPROPER_DENOMINATOR = 3;
+const string DENOMINATOR_ZERO_MESSAGE = "The denominator cannot be zero.";
+const string NUMERATOR_ZERO_MESSAGE = "The numerator cannot be zero.";
+const string NUMERATOR_NEGATIVE_MESSAGE = "The numerator cannot be negative.";
+const string DENOMINATOR_NEGATIVE_MESSAGE = "The denominator cannot be negative.";
+const string WHOLE_NEGATIVE_MESSAGE = "The whole number cannot be negative.";
+const string INVALID_MIXED_FRACTION_MESSAGE = "The numerator cannot be greater than the denominator when the whole number is greater than zero.";
+const string UNKNOWN_ERROR_MESSAGE = "An unknown fraction error occurred.";
+const string NO_ERROR_MESSAGE = "No fraction error.";
+const string INPUT_ERROR_MESSAGE = "Invalid menu choice.";
 
 enum MenuOption
 {
     INVALID_CHOICE = 0,
-    VALID_FRACTION,
-    ZERO_DENOMINATOR,
-    ZERO_NUMERATOR,
-    NEGATIVE_NUMERATOR_TEST,
-    NEGATIVE_DENOMINATOR_TEST,
-    NEGATIVE_WHOLE_TEST,
-    IMPROPER_FRACTION,
-    UNKNOWN_ERROR_TEST,
+    DEMO,
     QUIT
 };
 
@@ -49,18 +51,21 @@ enum FractionError
 class FractionException
 {
 private:
-    string errorMessage = "A fraction error occurred.";
+    string errorMessage = UNKNOWN_ERROR_MESSAGE;
 
 public:
-    FractionException(FractionError error);
+    explicit FractionException(FractionError error = UNKNOWN_FRACTION_ERROR);
+
     string getMessage() const;
 };
 
 class Fraction
 {
 private:
-    int numerator = 1;
-    int denominator = 1;
+    int numerator = DEFAULT_NUMERATOR;
+    int denominator = DEFAULT_DENOMINATOR;
+    bool lastOperationSuccessful = true;
+    string lastErrorMessage = NO_ERROR_MESSAGE;
 
     static int fractionCount;
     static const int DEFAULT_NUMERATOR = 1;
@@ -68,10 +73,10 @@ private:
 
 public:
     Fraction();
+    Fraction(const Fraction& otherFraction);
     Fraction(int newNumerator);
     Fraction(int newNumerator, int newDenominator);
     Fraction(int whole, int newNumerator, int newDenominator);
-    Fraction(const Fraction& otherFraction);
     ~Fraction();
 
     void setNumerator(int newNumerator);
@@ -80,6 +85,8 @@ public:
     void setFraction(int newNumerator, int newDenominator);
     void setFraction(int whole, int newNumerator, int newDenominator);
 
+    string getLastErrorMessage() const;
+    bool wasLastOperationSuccessful() const;
     string toString() const;
     void print() const;
 
