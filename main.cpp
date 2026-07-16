@@ -166,37 +166,35 @@ FractionException::FractionException(FractionError error)
     switch (error)
     {
         case DENOMINATOR_ZERO:
-            errorMessage = "The denominator cannot be zero.";
+            errorMessage = DENOMINATOR_ZERO_MESSAGE;
             break;
 
         case NUMERATOR_ZERO:
-            errorMessage = "The numerator cannot be zero.";
+            errorMessage = NUMERATOR_ZERO_MESSAGE;
             break;
 
         case NUMERATOR_NEGATIVE:
-            errorMessage = "The numerator cannot be negative.";
+            errorMessage = NUMERATOR_NEGATIVE_MESSAGE;
             break;
 
         case DENOMINATOR_NEGATIVE:
-            errorMessage = "The denominator cannot be negative.";
+            errorMessage = DENOMINATOR_NEGATIVE_MESSAGE;
             break;
 
         case WHOLE_NEGATIVE:
-            errorMessage = "The whole number cannot be negative.";
+            errorMessage = WHOLE_NEGATIVE_MESSAGE;
             break;
 
         case INVALID_MIXED_FRACTION:
-            errorMessage =
-                "The numerator cannot be greater than the denominator "
-                "when the whole number is greater than zero.";
+            errorMessage = INVALID_MIXED_FRACTION_MESSAGE;
             break;
 
         case UNKNOWN_FRACTION_ERROR:
-            errorMessage = "An unknown fraction error occurred.";
+            errorMessage = UNKNOWN_ERROR_MESSAGE;
             break;
 
         default:
-            errorMessage = "An unknown fraction error occurred.";
+            errorMessage = UNKNOWN_ERROR_MESSAGE;
             break;
     }
 }
@@ -229,58 +227,7 @@ Post-condition:
 */
 Fraction::Fraction()
 {
-    setFraction(0, DEFAULT_NUMERATOR, DEFAULT_DENOMINATOR);
-    fractionCount++;
-}
-
-/*
-Description:
-    Creates a Fraction using one numerator argument.
-
-Pre-condition:
-    newNumerator is intended to represent a positive numerator.
-
-Post-condition:
-    A valid Fraction exists and the Fraction object count is increased.
-    If the value is invalid, an exception is thrown.
-*/
-Fraction::Fraction(int newNumerator)
-{
-    setFraction(0, newNumerator, DEFAULT_DENOMINATOR);
-    fractionCount++;
-}
-
-/*
-Description:
-    Creates a Fraction using a numerator and denominator.
-
-Pre-condition:
-    The supplied values are intended to represent a positive Fraction.
-
-Post-condition:
-    A valid Fraction exists and the Fraction object count is increased.
-    If a value is invalid, an exception is thrown.
-*/
-Fraction::Fraction(int newNumerator, int newDenominator)
-{
-    setFraction(0, newNumerator, newDenominator);
-    fractionCount++;
-}
-
-/*
-Description:
-    Creates a Fraction using a whole number, numerator, and denominator.
-
-Pre-condition:
-    The supplied values are intended to represent a positive Fraction.
-
-Post-condition:
-    A valid Fraction exists and the Fraction object count is increased.
-    If a value is invalid, an exception is thrown.
-*/
-Fraction::Fraction(int whole, int newNumerator, int newDenominator)
-{
-    setFraction(whole, newNumerator, newDenominator);
+    setFraction(DEFAULT_NUMERATOR, DEFAULT_DENOMINATOR);
     fractionCount++;
 }
 
@@ -296,7 +243,55 @@ Post-condition:
 */
 Fraction::Fraction(const Fraction& otherFraction)
 {
-    setFraction(0, otherFraction.numerator, otherFraction.denominator);
+    setFraction(otherFraction.numerator, otherFraction.denominator);
+    fractionCount++;
+}
+
+/*
+Description:
+    Creates a Fraction using one numerator argument.
+
+Pre-condition:
+    newNumerator is intended to represent a positive numerator.
+
+Post-condition:
+    A valid Fraction exists and the Fraction object count is increased.
+*/
+Fraction::Fraction(int newNumerator)
+{
+    setFraction(newNumerator, DEFAULT_DENOMINATOR);
+    fractionCount++;
+}
+
+/*
+Description:
+    Creates a Fraction using a numerator and denominator.
+
+Pre-condition:
+    The supplied values are intended to represent a positive Fraction.
+
+Post-condition:
+    A valid Fraction exists and the Fraction object count is increased.
+*/
+Fraction::Fraction(int newNumerator, int newDenominator)
+{
+    setFraction(newNumerator, newDenominator);
+    fractionCount++;
+}
+
+/*
+Description:
+    Creates a Fraction using a whole number, numerator, and denominator.
+
+Pre-condition:
+    The supplied values are intended to represent a positive Fraction.
+
+Post-condition:
+    A valid Fraction exists and the Fraction object count is increased.
+*/
+Fraction::Fraction(int whole, int newNumerator, int newDenominator)
+{
+    setFraction(whole, newNumerator, newDenominator);
     fractionCount++;
 }
 
@@ -327,11 +322,10 @@ Pre-condition:
 
 Post-condition:
     The numerator is changed only when the proposed Fraction is valid.
-    Otherwise, an exception is thrown and the Fraction is unchanged.
 */
 void Fraction::setNumerator(int newNumerator)
 {
-    setFraction(0, newNumerator, denominator);
+    setFraction(newNumerator, denominator);
 }
 
 /*
@@ -343,11 +337,10 @@ Pre-condition:
 
 Post-condition:
     The denominator is changed only when the proposed Fraction is valid.
-    Otherwise, an exception is thrown and the Fraction is unchanged.
 */
 void Fraction::setDenominator(int newDenominator)
 {
-    setFraction(0, numerator, newDenominator);
+    setFraction(numerator, newDenominator);
 }
 
 /*
@@ -359,11 +352,10 @@ Pre-condition:
 
 Post-condition:
     The Fraction is changed only when the proposed value is valid.
-    Otherwise, an exception is thrown and the Fraction is unchanged.
 */
 void Fraction::setFraction(int newNumerator)
 {
-    setFraction(0, newNumerator, DEFAULT_DENOMINATOR);
+    setFraction(newNumerator, DEFAULT_DENOMINATOR);
 }
 
 /*
@@ -375,13 +367,11 @@ Pre-condition:
 
 Post-condition:
     The Fraction is changed only when the proposed values are valid.
-    Otherwise, an exception is thrown and the Fraction is unchanged.
 */
 void Fraction::setFraction(int newNumerator, int newDenominator)
 {
     setFraction(0, newNumerator, newDenominator);
 }
-
 /*
 Description:
     Validates and stores a whole number, numerator, and denominator.
@@ -391,49 +381,85 @@ Pre-condition:
 
 Post-condition:
     Valid values are stored in the Fraction. If a value is invalid,
-    an exception is thrown and the Fraction remains unchanged.
+    the Fraction remains unchanged and the error message is stored.
 */
-void Fraction::setFraction(
-    int whole,
-    int newNumerator,
-    int newDenominator
-)
+void Fraction::setFraction(int whole, int newNumerator, int newDenominator)
 {
     int proposedNumerator = numerator;
     int proposedDenominator = denominator;
 
-    if (newDenominator == 0)
-    {
-        throw FractionException(DENOMINATOR_ZERO);
-    }
-    else if (newNumerator == 0)
-    {
-        throw FractionException(NUMERATOR_ZERO);
-    }
-    else if (newNumerator < 0)
-    {
-        throw FractionException(NUMERATOR_NEGATIVE);
-    }
-    else if (newDenominator < 0)
-    {
-        throw FractionException(DENOMINATOR_NEGATIVE);
-    }
-    else if (whole < 0)
-    {
-        throw FractionException(WHOLE_NEGATIVE);
-    }
-    else if (whole > 0 && newNumerator > newDenominator)
-    {
-        throw FractionException(INVALID_MIXED_FRACTION);
-    }
-    else
-    {
-        proposedNumerator = whole * newDenominator + newNumerator;
-        proposedDenominator = newDenominator;
-    }
+    lastOperationSuccessful = false;
+    lastErrorMessage = UNKNOWN_ERROR_MESSAGE;
 
-    numerator = proposedNumerator;
-    denominator = proposedDenominator;
+    try
+    {
+        if (newDenominator == 0)
+        {
+            throw FractionException(DENOMINATOR_ZERO);
+        }
+        else if (newNumerator == 0)
+        {
+            throw FractionException(NUMERATOR_ZERO);
+        }
+        else if (newNumerator < 0)
+        {
+            throw FractionException(NUMERATOR_NEGATIVE);
+        }
+        else if (newDenominator < 0)
+        {
+            throw FractionException(DENOMINATOR_NEGATIVE);
+        }
+        else if (whole < 0)
+        {
+            throw FractionException(WHOLE_NEGATIVE);
+        }
+        else if (whole > 0 && newNumerator > newDenominator)
+        {
+            throw FractionException(INVALID_MIXED_FRACTION);
+        }
+        else
+        {
+            proposedNumerator = whole * newDenominator + newNumerator;
+            proposedDenominator = newDenominator;
+            numerator = proposedNumerator;
+            denominator = proposedDenominator;
+            lastOperationSuccessful = true;
+            lastErrorMessage = NO_ERROR_MESSAGE;
+        }
+    }
+    catch (const FractionException& error)
+    {
+        lastErrorMessage = error.getMessage();
+    }
+}
+/*
+Description:
+    Returns the last Fraction error message.
+
+Pre-condition:
+    A Fraction object exists.
+
+Post-condition:
+    The stored error message is returned.
+*/
+string Fraction::getLastErrorMessage() const
+{
+    return lastErrorMessage;
+}
+
+/*
+Description:
+    Reports whether the last Fraction operation succeeded.
+
+Pre-condition:
+    A Fraction object exists.
+
+Post-condition:
+    true is returned if the last operation succeeded.
+*/
+bool Fraction::wasLastOperationSuccessful() const
+{
+    return lastOperationSuccessful;
 }
 
 /*
@@ -510,49 +536,30 @@ Post-condition:
 void displayMenu()
 {
     cout << "\n\nFraction Class Test Menu\n"
-            "1 Demonstrate valid Fractions\n"
-            "2 Test zero denominator\n"
-            "3 Test zero numerator\n"
-            "4 Test negative numerator\n"
-            "5 Test negative denominator\n"
-            "6 Test negative whole number\n"
-            "7 Test invalid mixed fraction\n"
-            "8 Test unknown error\n"
-            "9 Quit\n";
+            "1 Demo\n"
+            "2 Quit\n";
 }
 
 /*
 Description:
-    Reads and validates a menu choice.
+    Reads a menu choice.
 
 Pre-condition:
     The input stream is available.
 
 Post-condition:
-    A valid MenuOption is returned.
+    A MenuOption value is returned.
 */
 MenuOption getMenuChoice()
 {
     int numericChoice = INVALID_CHOICE;
-    bool validChoice = false;
 
-    while (!validChoice)
+    cout << "Enter your choice: ";
+    cin >> numericChoice;
+
+    if (cin.fail())
     {
-        cout << "Enter your choice: ";
-        cin >> numericChoice;
-
-        if (cin.fail())
-        {
-            handleInputError("Invalid menu choice.");
-        }
-        else if (numericChoice < VALID_FRACTION || numericChoice > QUIT)
-        {
-            handleInputError("Invalid menu choice.");
-        }
-        else
-        {
-            validChoice = true;
-        }
+        numericChoice = INVALID_CHOICE;
     }
 
     return static_cast<MenuOption>(numericChoice);
@@ -568,11 +575,33 @@ Pre-condition:
 Post-condition:
     The input stream is ready for new input and the message is displayed.
 */
-void handleInputError(const string& errorMessage)
+void clearCin(const string& errorMessage)
 {
     cin.clear();
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
     cout << errorMessage << '\n';
+}
+
+/*
+Description:
+    Runs all Fraction demonstrations.
+
+Pre-condition:
+    The Fraction class is available.
+
+Post-condition:
+    All required Fraction demonstrations are displayed.
+*/
+void runDemo()
+{
+    demonstrateValidFractions();
+    testZeroDenominator();
+    testZeroNumerator();
+    testNegativeNumerator();
+    testNegativeDenominator();
+    testNegativeWholeNumber();
+    testInvalidMixedFraction();
+    testUnknownError();
 }
 
 /*
